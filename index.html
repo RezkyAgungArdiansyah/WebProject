@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developing an Enhanced Recommendation System</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<article>
+    <h1>Developing an Enhanced Recommendation System for Women's Clothing in E-Commerce: A Comparative Analysis of Traditional Machine Learning and Deep Learning Approaches</h1>
+
+    <p><strong>Authors:</strong> Rezky Agung, Fairuuz Nurdiaz Amaanullah</p>
+
+    <section id="introduction">
+        <h2>Introduction</h2>
+        <p>Customer reviews play an important role in the e-commerce sector. These reviews serve as an important tool for understanding customer sentiment. These reviews provide valuable insights into consumer preferences, experiences, and satisfaction levels, thereby enabling e-commerce businesses to make informed decisions. By analyzing customer feedback, companies can identify trends, improve product offerings, and improve the overall shopping experience <a href="#ref1" id="ref1-link">[1]</a>. This not only helps build a loyal customer base but also drives business growth and competitiveness in a crowded market. Therefore, leveraging customer reviews is crucial for women's clothing e-commerce platforms that aim to stay in tune with their customers' needs and preferences.</p>
+
+        <p>However, customer reviews have problems that need to be addressed, such as a variety of different feature types, namely text, categorical, and numeric. A lot of data is missing, such as the text in the review title where the solution must use adjective extraction to get a better meaning <a href="#ref2" id="ref2-link">[2]</a>. In the feature selection process, there are 10 important features, including: Title, Review Text, Rating, Recommended IND, etc <a href="#ref3" id="ref3-link">[3]</a>. Selecting the Recommended IND feature as a label is important because it shows whether customers recommend the product, which is a key indicator of customer satisfaction. Using the Rating feature is also very important because it provides direct information regarding customer assessments of products, which helps in analyzing sentiment in review text and title text to decide on business policies.</p>
+
+        <p>The problem of data imbalance in customer review datasets requires special handling to ensure that the machine learning model being built is not biased. This imbalance can cause the model to be more likely to predict the majority class, ignoring the minority class which is also important <a href="#ref4" id="ref4-link">[4]</a>. To balance the dataset, methods such as K-Means or Synthetic Minority Over-sampling Technique (SMOTE) can be used <a href="#ref5" id="ref5-link">[5]</a>. K-Means can help with clustering and then re-sampling to balance the classes, while SMOTE works by synthesizing new samples from the minority class to increase the number until it is more balanced with the majority class <a href="#ref6" id="ref6-link">[6]</a>. These two techniques help create a more balanced dataset, ultimately improving the model's performance and accuracy in predicting outcomes in both classes.</p>
+
+        <p>The recommendation flow starts with a simple Logistic Regression<a href="#ref7" id="ref7-link">[7]</a> with TF and TF-IDF <a href="#ref8" id="ref8-link">[8]</a> feature extraction, also the other comparing text representation using GloVe embeddings <a href="#ref9" id="ref9-link">[9]</a>, to ensure fixed length on features some approaches are used i.e. mean, median, max, midpoint, and absolute max pooling. After that, the best pooling is combined with TF-IDF to see whether the performance gets better or not. But ML models still fail to capture complex patterns in textual data. Convolutional neural networks (CNNs) <a href="#ref10" id="ref10-link">[10]</a> excel at recognizing local patterns, Recurrent neural networks (RNN) <a href="#ref11" id="ref11-link">[11]</a> are good for processing sequential data, while Long short-term memory <a href="#ref12" id="ref12-link">[12]</a> is able to handle long-term dependencies in text. The combination of CNN-LSTM with GloVe Embedding provides rich word representation and deep contextual understanding, resulting in highly accurate and reliable predictions.</p>
+    </section>
+
+    <section id="methods">
+        <h2>Methods and Experiments</h2>
+
+        <h3>Datasets Analysis</h3>
+        <h4>The Datasets</h4>
+        <p>The dataset utilized for this analysis is the Women's Clothing E-Commerce Reviews. It comprises reviews authored by genuine customers and has undergone anonymization. Table 1 displays the distribution of features and the label (Recommended IND) within the dataset.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Unique Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Clothing ID</td>
+                    <td>1172</td>
+                </tr>
+                <tr>
+                    <td>Age</td>
+                    <td>77</td>
+                </tr>
+                <tr>
+                    <td>Review Text</td>
+                    <td>22621</td>
+                </tr>
+                <tr>
+                    <td>Rating</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>Recommended IND</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Positive Feedback Count</td>
+                    <td>82</td>
+                </tr>
+                <tr>
+                    <td>Division Name</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Department Name</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Class Name</td>
+                    <td>20</td>
+                </tr>
+            </tbody>
+        </table>
+        <caption>Frequency Distribution of Datasets Features</caption>
+
+        <h4>Statistical Descriptive on Numerical Features</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Mean</th>
+                    <th>Std. Deviation</th>
+                    <th>Coef. Variance</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Age</td>
+                    <td>42.282</td>
+                    <td>12.328</td>
+                    <td>29.156%</td>
+                    <td>Integer</td>
+                </tr>
+                <tr>
+                    <td>Rating</td>
+                    <td>4.183</td>
+                    <td>1.115</td>
+                    <td>26.655%</td>
+                    <td>Categorical</td>
+                </tr>
+                <tr>
+                    <td>Recommended IND</td>
+                    <td>0.818</td>
+                    <td>0.385</td>
+                    <td>47.066%</td>
+                    <td>Categorical</td>
+                </tr>
+                <tr>
+                    <td>Positive Feedback</td>
+                    <td>2.631</td>
+                    <td>5.787</td>
+                    <td>219.955%</td>
+                    <td>Integer</td>
+                </tr>
+            </tbody>
+        </table>
+        <caption>Statistical Descriptive of Datasets Features</caption>
+        <p>It appears that our label distribution is unbalanced. With a mean of 0.818, it's evident that the majority of instances are labeled as 1. Additionally, positive feedback is concentrated within certain values, suggesting that relying on these features may not be advisable moving forward.</p>
+
+        <h3>Preprocessing Data</h3>
+        <ol>
+            <li>
+                <strong>Missing Value Handling</strong>
+                <p>To handle missing values, we first perform punctuation removal and lowercasing on each data entry. For blank review texts, we drop the entries since our main feature is text features, and we observed that if the review text is blank, the title is also usually blank, so these entries are removed. Additionally, information on product division, department, and class name is dropped. For other missing value titles, we fill them by extracting only the adjectives from the review text. The example is:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Review Text</th>
+                            <th>Title (After Extract Adjective)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Absolutely wonderful - silky and sexy and comfortable</td>
+                            <td>wonderful sexy comfortable</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li>Punctuation removal and lowercasing</li>
+            <li>
+                <strong>Feature Selection</strong>
+                <p>Rating and Recommended IND exhibit a high correlation score, while the remaining features display low positive or negative correlations. Hence, solely Rating and Recommended IND suffice as features. Furthermore, age is excluded as it bears no significant impact on the dataset. In scenarios where there's a missing title, adjective extraction is applied to extract adjectives from the Review Text, thus filling the gap.</p>
+            </li>
+            <li>SMOTE and KNN Clustering</li>
+        </ol>
+    </section>
+
+
+    <section id="Features Engineering">
+        <h2> Features Engineering</h2>
+        <p>Text data is unstructured text also, it’s more not straight forward as usual on tabular data, where it can directly fed into model, hence choosing some proper techniques are necessary to ensure better performance on our model. 
+            Feature engineering plays a pivotal role in transforming raw text into structured numerical representations that machine learning algorithms can effectively analyze. Techniques such as tokenization, vectorization, and embedding are employed to extract meaningful features from text, enabling tasks such as sentiment analysis, classification, clustering, and information retrieval. Employ a variety of techniques to transform raw textual information into structured features, enabling effective machine learning model training and inference.
+        </p>
+        <h3> Features Extraction</h3>
+        <ol>
+            <li><strong>Bag-Of-Words Representation</strong>
+            <p>BOW is a corpus text representation where using word as features and also each document will represent by a vector. The BoW model represents text as a collection of words and their frequency in a given document or corpus. It does not consider the order or context in which the words appear, and therefore, it may not capture the full meaning of the text. The BoW model is simple and easy to implement, but it has limitations in capturing the meaning of language.</p>
+            <ul>
+                <li>
+                    <strong> Term Frequency (TF)</strong>
+                    <p>Measures how frequently a term appears in a document</p>
+                    \[TF(t,d) = \dfrac{number\, of\, times\, t\, appears\, in \,d}{total\,number\, of \,terms\, in \,d}\]
+                </li>
+                <li>
+                    <strong>Term Frequency - Index Document Frequency (TF-IDF)</strong>
+                    <p>Weighs a term's frequency in a document against its frequency across all documents, highlighting important terms unique to each document.</p>
+                    \[TF-IDF(t,d) = TF(t,d) * IDF(t) \qquad IDF(t) = \log\dfrac{N}{1+df}\]
+
+                </li>
+            </ul>
+            <p>to prevent the curse of dimensionality where weird words, typo words on corpus, then for the features are setted to be appears for each words appears 10 times. </p>
+            <pre>
+                <code>
+                count_vect = CountVectorizer(min_df = 10)
+                tfidf_vect = TfidfVectorizer(min_df = 10)
+                </code>
+            </pre>
+            </li>
+            <li>
+                <strong>Global Vectors for Words Representation</strong>
+                <p>GloVe (Global Vectors for Word Representation) is an unsupervised learning algorithm for generating word embeddings by aggregating global word-word co-occurrence statistics from a corpus. The Core Idea is this methods using Matrix Factorization to construct co-occurence matrix \(X\), where \(X_{ij}\) denotes how often word \(j\) appears in the context of word \(i\). Then this matrix is factorized into word vectors \(W\) and context vectors \(C\) such their dot product approximates the logarithms of the co-occurence probabilities \(X_{ij} \approx exp(W_i^TC_i)\). GloVe provides an effective way to learn dense vector representations of words from large text corpora, capturing semantic similarities and relationships between words.</p>
+            </li>
+        </ol>
+
+        <h2>Re-balancing Using SMOTE and K Means</h2>
+        <p>Our analysis has detected some common problems about unbalanced labels. Unbalanced labels can lead to major issues where the model cannot learn on minority pattern data. To address this problem, we use the Synthetic Minority Oversampling Technique (SMOTE) and K-Means to deal with this data. As a result, the problem is solved with an increase in the F1-Score on Zero class predictions.</p>
+        <ol>
+            <li>
+                <strong>Synthetic Minority Over-sampling Technique</strong>
+                <p>SMOTE is a method used to address class imbalance in machine learning datasets by generating synthetic samples for the minority class. It works by creating new instances of minority class samples by interpolating between existing minority class instances, thus helping to balance the class distribution and improve the performance of classifiers, especially in scenarios where the minority class is underrepresented.<cite>[Chawla et al., 2002]</cite></p>
+                <p>The Equation for generating a synthetic sample can be represented as:</p>
+                <p><img src="https://latex.codecogs.com/svg.latex?New%20Samples%20=%20Sample%20+%20(Random%20Value%20\times%20(Neighbor%20-%20Samples))" alt="New Samples = Sample + (Random Value * (Neighbor - Samples))"></p>
+                <p>The visualization of SMOTE is given by:</p>
+                <center>
+                <figure>
+                    <img src="Pictures/SMOTE.png" alt="SMOTE Generating Data Visualization" width="50%">
+                    <figcaption><a href="https://medium.com/@prudhvithtavva/why-always-using-smote-is-not-recommended-ce21f981d31e">SMOTE Generating Data Visualization</a></figcaption>
+                </figure>
+                </center>
+                <div class="container">
+                    <div class="image-container">
+                        <img src="Pictures/Without SMOTE .png" alt="Image 1">
+                        <div class="image-caption">(a) Without SMOTE</div>
+                    </div>
+                    <div class="image-container">
+                        <img src="Pictures/With SMOTE .png" alt="Image 2">
+                        <div class="image-caption">(b) With SMOTE</div>
+                    </div>
+                </div>
+                <p>As we can see, SMOTE successfully increases performance for zero classes; hence, we will use SMOTE for all results.</p>
+            </li>
+            <li>
+                <strong>K-Means Clustering</strong>
+                <p>K-Means Clustering <cite>[Bradley et al., 2000]</cite> is an Unsupervised Machine Learning algorithm that groups unlabeled datasets into different clusters to explore the fundamentals and workings of K-Means clustering along with the implementation. Let there be a set of <img src="https://latex.codecogs.com/svg.latex?n" alt="n"> d-dimensional data <img src="https://latex.codecogs.com/svg.latex?x%20\in%20\mathbb{R}^d%20,%20i%20=%201,2,...,n" alt="x in R^d , i = 1,2,...,n">. It is assumed that there are <img src="https://latex.codecogs.com/svg.latex?K" alt="K"> (must be <img src="https://latex.codecogs.com/svg.latex?\leq" alt="<= n">) clusters <img src="https://latex.codecogs.com/svg.latex?S_1,%20S_2,...,%20S_k" alt="{S_1 , S_2, ... , S_k}">. K-means clustering hopes to minimize the sum of squares of the errors between the data within the cluster and the cluster center. The mathematical formula is as follows:</p>
+                <p><img src="https://latex.codecogs.com/svg.latex?\text{argmin}_{\mu}%20\sum_{c=1}^K%20\sum_{i=1}^{n_c}%20\|%20x_i%20-%20\mu_c%20\|^2" alt="argmin_{μ} ∑_{c=1}^K ∑_{i=1}^{n_c} || x_i - μ_c ||^2"></p>
+                <p>The visualization of data without K-Means and with K-Means:</p>
+                <div class="container">
+                    <div style ="max-width: 100%;" class="image-container">
+                        <img src="Pictures/wokmean.png" alt="Image 1">
+                        <div class="image-caption">(a) Without K-Means  </div>
+                    </div>
+                    <div style ="max-width: 100%;" class="image-container">
+                        <img src="Pictures/wkmean.png" alt="Image 2">
+                        <div class="image-caption">(b) With K-Means</div>
+                    </div>
+                </div>
+
+                <p>Figure (a) shows unbalanced reviews of clustering women's clothing e-commerce reviews, while Figure (b) shows the results of clustering women's clothing e-commerce reviews using offset K-Means. Figure (b) shows that with K-Means, data can be balanced so that the analysis and model applied are more accurate and fair. Figure (a) shows the risk of bias from original data that is not balanced so that it cannot predict more accurately, as evidenced by the recommendation prediction results as follows:</p>
+                
+                <div class="container">
+                    <div style ="max-width: 40%;" class="image-container">
+                        <img src="Pictures/pred no kmean.png" alt="Image 1">
+                        <div class="image-caption">(a) Without K-Means  </div>
+                    </div>
+                    <div style ="max-width: 40%;" class="image-container">
+                        <img src="Pictures/pred w kmean.png" alt="Image 2">
+                        <div class="image-caption">(b) With K-Means</div>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    
+        <h2>Pooling</h2>
+        <p>In order to convert a bunch of vectors to tabular data, so it can train on fixed length features, the techniques can be easily achieved by only averaging in common ways, but to take other approaches we tried more ways like taking the median, midpoint, max, and absolute max pooling.</p>
+        <p>Given a sentence that every word of the sentence can be represented by vectors using GloVe, let <img src="https://latex.codecogs.com/svg.latex?x_{ij}" alt="x_{ij}"> be a vector of word <img src="https://latex.codecogs.com/svg.latex?i" alt="i"> with dimension <img src="https://latex.codecogs.com/svg.latex?D" alt="D">.</p>
+        <ol>
+            <li>
+                <strong>Mean Pooling:</strong> This approach can be done by taking the average of the vectors with unfixed length sentence <img src="https://latex.codecogs.com/svg.latex?n" alt="n"> of each data.
+                <p><img src="https://latex.codecogs.com/svg.latex?\sum_{i=1}^{n}%20\dfrac{x_{i}}{n}%20\in%20\mathbb{R}^D" alt="∑_{i = 1}^{n} (x_{i}/n) ∈ R^D"></p>
+            </li>
+            <li>
+                <strong>Median Pooling:</strong> This approach is taking the median of each feature.
+                \[ \begin{bmatrix}
+                    a_{11} & a_{12} & \cdots & a_{1n} \\
+                    a_{21} & a_{22} & \cdots & a_{2n} \\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    a_{D1} & a_{D2} & \cdots & a_{Dn} \\
+                \end{bmatrix}_{D\times N} \xrightarrow{convert \,to} \begin{bmatrix}
+                    median(a_{1j}, \forall j\leq n )\\
+                    median(a_{2j}, \forall j\leq n )\\
+                    \vdots\\
+                    median(a_{Dj}, \forall j\leq n )
+                \end{bmatrix} \]
+            </li>
+            <li>
+                <strong>Max Pooling:</strong> This approach can be done by find the max value of each features in every vectors
+                \[ \begin{bmatrix}
+                a_{11} & a_{12} & \cdots & a_{1n} \\
+                a_{21} & a_{22} & \cdots & a_{2n} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                a_{D1} & a_{D2} & \cdots & a_{Dn} \\
+                \end{bmatrix}_{D\times N} \xrightarrow{convert \,to} \begin{bmatrix}
+                max(a_{1j}, \forall j\leq n )\\
+                max(a_{2j}, \forall j\leq n )\\
+                \vdots\\
+                max(a_{Dj}, \forall j\leq n )
+                \end{bmatrix}
+                \]
+            </li>
+            <li>
+                <strong> Midpoint Pooling: </strong> This approach can be done by find the max value of each features in every vectors
+                \[ \begin{bmatrix}
+                a_{11} & a_{12} & \cdots & a_{1n} \\
+                a_{21} & a_{22} & \cdots & a_{2n} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                a_{D1} & a_{D2} & \cdots & a_{Dn} \\
+                \end{bmatrix}_{D\times N} \xrightarrow{convert \,to} \begin{bmatrix}
+                max(a_{1j}) - min(a_{1j}),  \forall j\leq n  \\
+                max(a_{2j}) - min(a_{2j}),  \forall j\leq n \\
+                \vdots\\
+                max(a_{Dj}) - min(a_{Dj}),  \forall j\leq n 
+                \end{bmatrix} \]
+            </li>
+            <li>
+                <strong>absolute Max Pooling: </strong>This approach done by absoluting all value on matrices then do max pooling
+                \[ \begin{bmatrix}
+                a_{11} & a_{12} & \cdots & a_{1n} \\
+                a_{21} & a_{22} & \cdots & a_{2n} \\
+                \vdots & \vdots & \ddots & \vdots \\
+                a_{D1} & a_{D2} & \cdots & a_{Dn} \\
+                \end{bmatrix}_{D\times N} \xrightarrow{convert \,to} \begin{bmatrix}
+                max(abs(a_{1j}, \forall j\leq n ))\\
+                max(abs(a_{2j}, \forall j\leq n ))\\
+                \vdots\\
+                max(abs(a_{Dj}, \forall j\leq n ))
+                \end{bmatrix}
+                \]
+            </li>
+        </ol>
+
+        <h2>Model Workflow</h2>
+        <ol>
+            <li><strong>Machine Learning with Logistic Regression Workflow</strong>
+                <p>Machine Learning with Logistic Regression Workflow below is diagram of ML workflow of our process. Then the result will evaluate with metrics like accuracy, precision, recall, F1-Score, and loss in figure <a href="#fig-ml">1</a>:</p>
+                <figure id="fig-ml">
+                    <img src="Pictures/MLDiagram.png" alt="Machine Learning Workflow">
+                    <figcaption>Machine Learning Workflow</figcaption>
+                </figure>
+            </li>
+            <li><strong>Deep Learning CNN-LSTM workflow (proposed method)</strong>
+                <p>Deep Learning with Neural Networks Workflow below is diagram of DL workflow of our process. Then the result will evaluate with metrics like accuracy, precision, recall, F1-Score, and loss in figure <a href="#fig-NN">2</a>:</p>
+                <div class="image-container">
+                    <img src="Pictures/DLDiagram.png" alt="Deep Learning Workflow">
+                    <div class="image-caption"> Deep Learning Workflow</div>
+                </div>        
+
+            </li>
+        </ol>
+        
+        <h2>Result and Analysis</h2>
+        
+        <ol>
+            <li>
+                <p>Result of machine learning approach using logistic regression without rating features, from the table <a href="#tab-metrics-without-rating">1</a> some point that we can learn:</p>
+                <ol type="a">
+                    <li>The result wasn't overfitted evenly without regularization the difference accuracy only 1-3%, but not show here to save more space</li>
+                    <li><strong>TF and TF-IDF</strong> alone also perform well, with TF achieving slightly better overall scores than TF-IDF in terms of Accuracy and F1-Score.</li>
+                    <li>GloVe 200D with mean pooling shows a good performance but falls short <strong>compared to the other approach.</strong></li>
+                    <li><strong>Mean pooling</strong> consistently outperforms other pooling methods (median, midpoint, and abs max pooling).</li>
+                    <li><strong>Dimension Impact:</strong> Increasing the dimensionality of GloVe embeddings from 50D to 200D improves performance, as seen with GloVe 50D, 100D, and 200D. The higher-dimensional GloVe 200D with mean pooling performs better than lower-dimensional counterparts.</li>
+                    <li><strong>Best Performance:</strong> The combination of GloVe 200D embeddings with TF and mean pooling achieves the highest overall performance across all metrics. It has the highest Accuracy (0.934), Precision (0.950), Recall (0.913), F1-Score (0.931), and the lowest Loss (0.1959). This indicates that combining TF features with GloVe embeddings and using mean pooling effectively leverages the strengths of both methods.</li>
+                </ol>
+                <figure>
+                    <img src="Pictures/Com Los.png" alt="Loss Curve">
+                    <img src="Pictures/Com Acc.png" alt="Accuration Curve">
+                    <figcaption>A visualization of learning curve Neural Networks model in : (a) Loss Curve (b) Accuration Curve</figcaption>
+                </figure>
+            </li>
+            <!-- Similar list items for other results -->
+        </ol>
+        
+        <h2>Conclusion</h2>
+        <ol>
+            <li>Re-Balancing data is a must because model can't learn the minority classes pattern, it can be seen on the lack of precision and recall on zero classes before rebalanced, on this project we provide 2 approach, first the common method SMOTE used on logistic regression and KNN clustering on deep learning part. both of the method helps significantly enhances our performance model on zero classes.</li>
+            <li>Of the 10 available features, the features that have the most influence in this prediction are the review text, title text and rating features which are useful for giving weight to review sentiment and title text. These features provide important insights into customer opinions and satisfaction levels. Analyzing sentiment in review text and headlines, as well as ratings, enables a nuanced understanding of customer feedback, which can significantly increase the predictive power of a model.</li>
+            <!-- Similar list items for other conclusions -->
+        </ol>
+        
+
+
+
+    </section>
+    <section id="references">
+        <h2>References</h2>
+        <ol>
+            <li id="ref1">Abrahams, A. S., Jiao, J., Wang, G. A., & Fan, W. (2012). Vehicle defect discovery from social media. Decision Support Systems, 54(1), 87-97.</li>
+            <li id="ref2">Feldman, R., & Sanger, J. (2006). The text mining handbook: Advanced approaches in analyzing unstructured data. Cambridge University Press.</li>
+            <li id="ref3">Silge, J., & Robinson, D. (2017). Text mining with R: A tidy approach. O'Reilly Media, Inc.</li>
+            <li id="ref4">He, H., & Garcia, E. A. (2009). Learning from imbalanced data. IEEE Transactions on Knowledge and Data Engineering, 21(9), 1263-1284.</li>
+            <li id="ref5">Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P. (2002). SMOTE: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research, 16, 321-357.</li>
+            <li id="ref6">Zhang, C., & Ma, Y. (2012). Ensemble machine learning: Methods and applications. Springer Science & Business Media.</li>
+            <li id="ref7">Hosmer Jr, D. W., Lemeshow, S., & Sturdivant, R. X. (2013). Applied logistic regression (Vol. 398). John Wiley & Sons.</li>
+            <li id="ref8">Ramos, J. (2003, December). Using TF-IDF to determine word relevance in document queries. In Proceedings of the First International Conference on Machine Learning (Vol. 242, pp. 29-48).</li>
+            <li id="ref9">Pennington, J., Socher, R., & Manning, C. D. (2014). GloVe: Global vectors for word representation. In Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP) (pp. 1532-1543).</li>
+            <li id="ref10">Kim, Y. (2014). Convolutional neural networks for sentence classification. arXiv preprint arXiv:1408.5882.</li>
+            <li id="ref11">Lipton, Z. C., Berkowitz, J., & Elkan, C. (2015). A critical review of recurrent neural networks for sequence learning. arXiv preprint arXiv:1506.00019.</li>
+            <li id="ref12">Hochreiter, S., & Schmidhuber, J. (1997). Long short-term memory. Neural computation, 9(8), 1735-1780.</li>
+        </ol>
+    </section>
+</article>
+
+</body>
+</html>
