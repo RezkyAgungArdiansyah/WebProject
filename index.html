@@ -324,7 +324,7 @@
                 <p>Machine Learning with Logistic Regression Workflow below is diagram of ML workflow of our process. Then the result will evaluate with metrics like accuracy, precision, recall, F1-Score, and loss in figure <a href="#fig-ml">1</a>:</p>
                 <figure id="fig-ml">
                     <img src="Pictures/MLDiagram.png" alt="Machine Learning Workflow">
-                    <figcaption>Machine Learning Workflow</figcaption>
+                    <div class="image-caption">Machine Learning Workflow</div>
                 </figure>
             </li>
             <li><strong>Deep Learning CNN-LSTM workflow (proposed method)</strong>
@@ -350,20 +350,251 @@
                     <li><strong>Dimension Impact:</strong> Increasing the dimensionality of GloVe embeddings from 50D to 200D improves performance, as seen with GloVe 50D, 100D, and 200D. The higher-dimensional GloVe 200D with mean pooling performs better than lower-dimensional counterparts.</li>
                     <li><strong>Best Performance:</strong> The combination of GloVe 200D embeddings with TF and mean pooling achieves the highest overall performance across all metrics. It has the highest Accuracy (0.934), Precision (0.950), Recall (0.913), F1-Score (0.931), and the lowest Loss (0.1959). This indicates that combining TF features with GloVe embeddings and using mean pooling effectively leverages the strengths of both methods.</li>
                 </ol>
-                <figure>
-                    <img src="Pictures/Com Los.png" alt="Loss Curve">
-                    <img src="Pictures/Com Acc.png" alt="Accuration Curve">
-                    <figcaption>A visualization of learning curve Neural Networks model in : (a) Loss Curve (b) Accuration Curve</figcaption>
-                </figure>
             </li>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Text Representation</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TF</td>
+                        <td>0.928</td>
+                        <td>0.927</td>
+                        <td>0.926</td>
+                        <td>0.926</td>
+                        <td>0.2249</td>
+                    </tr>
+                    <tr>
+                        <td>TF-IDF</td>
+                        <td>0.925</td>
+                        <td>0.940</td>
+                        <td>0.903</td>
+                        <td>0.921</td>
+                        <td>0.2338</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 50D + mean pooling</td>
+                        <td>0.777</td>
+                        <td>0.785</td>
+                        <td>0.745</td>
+                        <td>0.764</td>
+                        <td>0.4631</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 100D + mean pooling</td>
+                        <td>0.821</td>
+                        <td>0.830</td>
+                        <td>0.794</td>
+                        <td>0.812</td>
+                        <td>0.4062</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 200D + mean pooling</td>
+                        <td>0.848</td>
+                        <td>0.857</td>
+                        <td>0.825</td>
+                        <td>0.840</td>
+                        <td>0.3668</td>
+                    </tr>
+                    <tr>
+                        <td>Glove 200D + median pooling</td>
+                        <td>0.827</td>
+                        <td>0.832</td>
+                        <td>0.806</td>
+                        <td>0.819</td>
+                        <td>0.3984</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 200D + midpoint pooling</td>
+                        <td>0.758</td>
+                        <td>0.755</td>
+                        <td>0.743</td>
+                        <td>0.749</td>
+                        <td>0.5005</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 200D + abs max pooling</td>
+                        <td>0.764</td>
+                        <td>0.758</td>
+                        <td>0.754</td>
+                        <td>0.756</td>
+                        <td>0.5029</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GloVe 200D + TF + mean pooling</strong></td>
+                        <td><strong>0.934</strong></td>
+                        <td><strong>0.950</strong></td>
+                        <td><strong>0.913</strong></td>
+                        <td><strong>0.931</strong></td>
+                        <td><strong>0.1959</strong></td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 200D + TF-IDF + mean pooling</td>
+                        <td>0.927</td>
+                        <td>0.944</td>
+                        <td>0.904</td>
+                        <td>0.924</td>
+                        <td>0.2288</td>
+                    </tr>
+                </tbody>
+                <caption>Performance Metrics for different Text Representation with LogisticRegression Without Rating Features</caption>
+            </table>
+        
+            <li>Result of machine learning approach using logistic regression with rating features, from the table <a href="#tab:metrics_with_rating">metrics_with_rating</a> some point that can explain:
+                <ul>
+                    <li>Introducing rating features leads to an improvement in performance metrics across all text representations. Accuracy, precision, recall, and F1-scores are generally higher, and loss values are lower compared to the models without rating features.</li>
+                    <li>Interestingly, GloVe 50D with mean pooling shows a significant improvement when rating features are included, reaching an accuracy of 0.961 and an F1-score of 0.959. This suggests that even lower-dimensional embeddings can perform well when complemented with additional informative features like ratings.</li>
+                    <li>GloVe 200D + TF + mean pooling continues to be the best-performing combination, achieving the highest metrics with an accuracy of 0.967, precision of 0.979, recall of 0.952, F1-score of 0.965, and the lowest loss of 0.1136.</li>
+                </ul>
+            </li>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Text Representation</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TF</td>
+                        <td>0.958</td>
+                        <td>0.952</td>
+                        <td>0.962</td>
+                        <td>0.957</td>
+                        <td>0.1272</td>
+                    </tr>
+                    <tr>
+                        <td>TF-IDF</td>
+                        <td>0.958</td>
+                        <td>0.968</td>
+                        <td>0.944</td>
+                        <td>0.956</td>
+                        <td>0.1297</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 50D + mean pooling</td>
+                        <td>0.961</td>
+                        <td>0.979</td>
+                        <td>0.939</td>
+                        <td>0.959</td>
+                        <td>0.1398</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 100D + mean pooling</td>
+                        <td>0.958</td>
+                        <td>0.975</td>
+                        <td>0.938</td>
+                        <td>0.956</td>
+                        <td>0.1397</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 200D + mean pooling</td>
+                        <td>0.958</td>
+                        <td>0.972</td>
+                        <td>0.940</td>
+                        <td>0.956</td>
+                        <td>0.1375</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GloVe 200D + TF + mean pooling</strong></td>
+                        <td><strong>0.967</strong></td>
+                        <td><strong>0.979</strong></td>
+                        <td><strong>0.952</strong></td>
+                        <td><strong>0.965</strong></td>
+                        <td><strong>0.1136</strong></td>
+                    </tr>
+                    <tr>
+                        <td>GloVe 200D + TF-IDF + mean pooling</td>
+                        <td>0.958</td>
+                        <td>0.967</td>
+                        <td>0.947</td>
+                        <td>0.957</td>
+                        <td>0.0598</td>
+                    </tr>
+                </tbody>
+                <caption>Performance Metrics for different Text Representation with LogisticRegression Without Rating Features</caption>
+            </table>
             <!-- Similar list items for other results -->
+        <li>
+            <strong>Result of Deep Learning Approach</strong>
+            <p>The table presents the performance of various neural networks models using GloVe embedding in women's clothing e-commerce review analysis, with accuracy, precision, recall, F1-score, and loss metrics measured for each model. The models compared include GloVe CNN, GloVe RNN, GloVe LSTM, and a combination of GloVe CNN LSTM. Based on the table, the performance of the neural networks model with GloVe embedding shows very good results in analyzing women's clothing e-commerce reviews. The GloVe CNN model achieved accuracy, precision, recall, and F1-score of 0.9703 with a loss of 0.1658, showing consistent performance but with slightly higher loss than the other models. The GloVe RNN model improves the performance metrics slightly higher with a value of 0.9726 and a reduction in loss to 0.1397, while the GloVe LSTM model shows further improvement with a value of 0.9735 and a loss of 0.1298, indicating better ability in handling long-term dependencies in text data. Finally, the GloVe CNN LSTM model shows the best performance with all metrics of 0.9764 and the lowest loss of 0.0688, combining the strengths of CNN in capturing local features and LSTM in handling sequential context, thus providing the most accurate and efficient results.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>GloVe CNN</td>
+                        <td>0.9703</td>
+                        <td>0.9703</td>
+                        <td>0.9703</td>
+                        <td>0.9703</td>
+                        <td>0.1658</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe RNN</td>
+                        <td>0.9726</td>
+                        <td>0.9726</td>
+                        <td>0.9726</td>
+                        <td>0.9726</td>
+                        <td>0.1397</td>
+                    </tr>
+                    <tr>
+                        <td>GloVe LSTM</td>
+                        <td>0.9735</td>
+                        <td>0.9735</td>
+                        <td>0.9735</td>
+                        <td>0.9735</td>
+                        <td>0.1298</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GloVe CNN LSTM</strong></td>
+                        <td><strong>0.9764</strong></td>
+                        <td><strong>0.9764</strong></td>
+                        <td><strong>0.9764</strong></td>
+                        <td><strong>0.9764</strong></td>
+                        <td><strong>0.0688</strong></td>
+                    </tr>
+                </tbody>
+                <caption>Performance metrics for different models</caption>
+            </table>
+            
+            <figure>
+                <img src="Pictures/Com Los.png" alt="Loss Curve">
+                <img src="Pictures/Com Acc.png" alt="Accuration Curve">
+                <figcaption>A visualization of learning curve Neural Networks model in : (a) Loss Curve (b) Accuration Curve</figcaption>
+            </figure>
+        </li>
         </ol>
+
+        
         
         <h2>Conclusion</h2>
         <ol>
-            <li>Re-Balancing data is a must because model can't learn the minority classes pattern, it can be seen on the lack of precision and recall on zero classes before rebalanced, on this project we provide 2 approach, first the common method SMOTE used on logistic regression and KNN clustering on deep learning part. both of the method helps significantly enhances our performance model on zero classes.</li>
+            <li>Re-Balancing data is a must because model can't learn the minority classes pattern, it can be seen on the lack of precision and recall on zero classes before rebalanced, on this project we provide 2 approach, first the common method SMOTE used on logistic regression and KNN clustering on deep learning part. both of the method helps significantly enhances our performance model on zero classes.</li> 
             <li>Of the 10 available features, the features that have the most influence in this prediction are the review text, title text and rating features which are useful for giving weight to review sentiment and title text. These features provide important insights into customer opinions and satisfaction levels. Analyzing sentiment in review text and headlines, as well as ratings, enables a nuanced understanding of customer feedback, which can significantly increase the predictive power of a model.</li>
-            <!-- Similar list items for other conclusions -->
+            <li>On Machine Learning part especiall logistic regression, importance of combining features the combination of traditional text representation methods (TF, TF-IDF) with advanced embeddings (GloVe) significantly enhances model performance. Mean pooling consistently outperforms other pooling strategies for GloVe embeddings, both with and without rating features. included rating features leads to a substantial improvement in all performance metrics, highlighting the value of additional contextual information.</li>
+            <li>Machine Learning models using Logistic Regression succeeded in predicting labels well with <strong>best accuracy 0.967</strong>, but Deep Learning models were still superior in predicting labels in sentiment analysis with <strong>highest accuracy 0.976</strong> of women's clothing recommendations. Logistic Regression, although effective, has limitations in capturing complex patterns and relationships in data. On the other hand, Deep Learning models, with their ability to learn complex patterns through multiple layers, provide more accurate and robust predictions in sentiment analysis tasks. The superior performance of Deep Learning models makes them more suitable for applications that require high accuracy and detailed understanding, such as personalized clothing recommendations.
+            </li><!-- Similar list items for other conclusions -->
         </ol>
         
 
